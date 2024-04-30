@@ -1,2 +1,4 @@
 injector-log.txt
+*.egg-info
+dist
 .env
