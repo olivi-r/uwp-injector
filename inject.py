@@ -1,5 +1,6 @@
 import logging
 import os
+import sys
 
 import ntsecuritycon
 import psutil
@@ -11,7 +12,7 @@ import win32process
 import win32security
 
 
-def inject(dll_path):
+def inject(executable_name, dll_path):
     logging.basicConfig(
         filename="injector-log.txt",
         level=logging.DEBUG,
@@ -41,7 +42,7 @@ def inject(dll_path):
     # get pid
     pid = None
     for p in psutil.process_iter():
-        if p.name() == "Minecraft.Windows.exe":
+        if p.name() == executable_name:
             pid = p.pid
             break
 
@@ -74,10 +75,10 @@ def inject(dll_path):
         win32api.CloseHandle(handle)
 
     else:
-        err = "Minecraft not running"
+        err = "Process not running"
         logging.error(err)
         raise ProcessLookupError(err)
 
 
 if __name__ == "__main__":
-    inject("horion-1.19.7X.dll")
+    inject(*sys.argv[1:])
